@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AQI Value Display</title>
+<style>
+body {
+background-color: #f0f0f0;
+font-family: Arial, sans-serif;
+font-size: 16px;
+}
+
+.aqi-value {
+padding: 10px;
+margin: 10px;
+color: #ffffff;
+font-weight: bold;
+display: inline-block;
+border-radius: 5px;
+text-align: center;
+min-width: 100px;
+}
+
+.aqi-good {
+background-color: #00e400;
+}
+
+.aqi-moderate {
+background-color: #ffff00;
+}
+
+.aqi-unhealthy-sensitive {
+background-color: #ff7e00;
+}
+.aqi-unhealthy {
+background-color: #ff0000;
+}
+
+.aqi-very-unhealthy {
+background-color: #8f3f97;
+}
+
+.aqi-hazardous {
+background-color: #7e0023;
+}
+</style>
+</head>
+<body>
+<h1>BTA04</h1>
+
+<h1>AQI value around you is:</h1>
+<div id="aqi-display"></div>
+
+<script>
+// Set the ThingSpeak channel ID and read API key
+var channelID = 2126010;
+var apiKey = 'LYAEO0TKNSQSUVBO';
+
+// Set the ThingSpeak API URL
+var apiUrl = 'https://api.thingspeak.com/channels/' + channelID + '/feeds/last.json?api_key=' + apiKey;
+
+// Send an HTTP GET request to the API URL
+fetch(apiUrl)
+  .then(response => response.json())
+  .then(data => {
+    // Extract the AQI value from the response data
+    var aqi = data.field1;
+
+    // Set the AQI display element and background color based on the AQI range
+    var aqiDisplay = document.getElementById('aqi-display');
+    aqiDisplay.innerText = 'AQI: ' + aqi;
+    if (aqi <= 50) {
+aqiDisplay.className = 'aqi-value aqi-good';
+    } else if (aqi <= 100) {
+aqiDisplay.className = 'aqi-value aqi-moderate';
+ } else if (aqi <= 150) {
+aqiDisplay.className = 'aqi-value aqi-unhealthy-sensitive';
+    } else if (aqi <= 200) {
+aqiDisplay.className = 'aqi-value aqi-unhealthy';
+    } else if (aqi <= 300) {
+aqiDisplay.className = 'aqi-value aqi-very-unhealthy';
+   } else {
+aqiDisplay.className = 'aqi-value aqi-hazardous';
+    }
+  })
+  .catch(error => console.error(error));
+</script>
+</body>
+</html>
